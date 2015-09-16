@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Welcome to Mars :)</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <script src='mars.js'></script>
+</head>
+<body onload='draw();'>
+<div class="row">
+    <div class="col-lg-12">
+        <h1>Exploring Mars
+            <small>have fun!</small>
+        </h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-8">
+        <canvas id="mars" width="800" height="800"></canvas>
+    </div>
+    <div class="col-lg-4">
+        <div class="form-group">
+            <label for="name">Rover</label>
+            <input class="form-control" id="name" placeholder="Rover Name">
+        </div>
+        <div class="form-group">
+            <label for="x">X</label>
+            <input class="form-control" id="x" placeholder="Enter X coordinate">
+        </div>
+        <div class="form-group">
+            <label for="y">Y</label>
+            <input class="form-control" id="y" placeholder="Enter Y coordinate">
+        </div>
+        <div class="form-group">
+            <label for="direction">Direction</label>
+            <input class="form-control" id="direction" placeholder="Enter direction (N, E, S, W)">
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <a href="#" onclick="newRover();" class="btn btn-success">Add new rover</a>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="move">Move</label>
+            <input class="form-control" id="move" placeholder="Enter move (L, R, M)">
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <a href="#" onclick="move();" class="btn btn-primary">Move</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <a href="#" onclick="draw();" class="btn btn-danger">Clear Mars</a><br/>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
