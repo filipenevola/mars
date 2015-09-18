@@ -1,3 +1,25 @@
+
+var NUMBER_OF_COLS = 8,//TODO ser definido pela tela
+    NUMBER_OF_ROWS = 8,//TODO ser definido pela tela
+    BLOCK_SIZE = 100,
+    PADDING_LEFT = 15,
+    PADDING_TOP = 97,
+    BLOCK_COLOUR_1 = '#d94e13',
+    BLOCK_COLOUR_2 = '#333333';
+
+var arrowSpec = {
+    'N': "/\\",
+    'E': ">",
+    'S': "\\/",
+    'W': "<"
+};
+
+var moveSpec = {
+    'L': {'N': 'W', 'E': 'N', 'S': 'E', 'W': 'S'},
+    'R': {'N': 'E', 'E': 'S', 'S': 'W', 'W': 'N'},
+    'M': {'N': {x: 0, y: 1}, 'E': {x: 1, y: 0}, 'S': {x: 0, y: -1}, 'W': {x: -1, y: 0}}
+}
+
 function Rover(name, x, y, direction) {
     this.name = name;
     this.x = x;
@@ -12,26 +34,10 @@ function Rover(name, x, y, direction) {
         this.y = y;
     }
     this.arrow = function () {
-        switch (this.direction) {
-            case 'N':
-                return "/\\";
-            case 'E':
-                return ">";
-            case 'S':
-                return "\\/";
-            case 'W':
-                return "<";
-        }
+        return arrowSpec[this.direction];
     }
 }
 
-var NUMBER_OF_COLS = 8,//TODO ser definido pela tela
-    NUMBER_OF_ROWS = 8,//TODO ser definido pela tela
-    BLOCK_SIZE = 100,
-    PADDING_LEFT = 15,
-    PADDING_TOP = 97,
-    BLOCK_COLOUR_1 = '#d94e13',
-    BLOCK_COLOUR_2 = '#333333';
 
 var rovers = {};
 
@@ -63,7 +69,7 @@ function drawBlock(iRowCounter, iBlockCounter) {
 
 function getRoverByName(roverName) {
     var rover = rovers[roverName];
-    if(rover === undefined) {
+    if (rover === undefined) {
         return undefined;
     }
     return rover;
@@ -71,7 +77,7 @@ function getRoverByName(roverName) {
 
 function drawPiece(rover) {
     var previousRover = getRoverByName(rover.name, false);
-    if(previousRover !== undefined) {
+    if (previousRover !== undefined) {
         drawBlock(previousRover.oldX, previousRover.oldY);
     }
 
@@ -115,25 +121,25 @@ function drawBoard() {
 function newRover() {
     //TODO validar tamanho pra nao quebrar o canvas
     var roverName = document.getElementById('name').value;
-    if(roverName === undefined || roverName == '') {
+    if (roverName === undefined || roverName == '') {
         alert('Inform the name of rover to add')
         return;
     }
     //TODO validar board
     var x = parseInt(document.getElementById('x').value);
-    if(x === undefined || x < 0) {
+    if (x === undefined || x < 0) {
         alert('Inform X coordinate')
         return;
     }
     //TODO validar board
     var y = parseInt(document.getElementById('y').value);
-    if(y === undefined || y < 0) {
+    if (y === undefined || y < 0) {
         alert('Inform Y coordinate')
         return;
     }
     //TODO validar direction
     var direction = document.getElementById('direction').value;
-    if(direction === undefined || direction == '') {
+    if (direction === undefined || direction == '') {
         alert('Inform direction (N, E, S or W)')
         return;
     }
@@ -142,75 +148,25 @@ function newRover() {
 
 function move() {
     var roverName = document.getElementById('name').value;
-    if(roverName === undefined || roverName == '') {
+    if (roverName === undefined || roverName == '') {
         alert('Inform the name of rover to Move')
         return;
     }
     var rover = getRoverByName(roverName);
-    if(rover === undefined) {
+    if (rover === undefined) {
         alert('Invalid Rover name');
         return;
     }
+
     var move = document.getElementById('move').value;
-    switch (move) {
-        case 'L':
-            //TODO fazer como array na ordem e ir somando para R e subtraindo para L
-            switch (rover.direction) {
-                case 'N':
-                    rover.direction = 'W';
-                    break;
-                case 'E':
-                    rover.direction = 'N';
-                    break;
-                case 'S':
-                    rover.direction = 'E';
-                    break;
-                case 'W':
-                    rover.direction = 'S';
-                    break;
-            }
-            rover.updatePosition(rover.x, rover.y);
-            drawPiece(rover);
-            break;
-        case 'R':
-            //TODO fazer como array na ordem e ir somando para R e subtraindo para L
-            switch (rover.direction) {
-                case 'N':
-                    rover.direction = 'E';
-                    break;
-                case 'E':
-                    rover.direction = 'S';
-                    break;
-                case 'S':
-                    rover.direction = 'W';
-                    break;
-                case 'W':
-                    rover.direction = 'N';
-                    break;
-            }
-            rover.updatePosition(rover.x, rover.y);
-            drawPiece(rover);
-            break;
-        case 'M':
-            switch (rover.direction) {
-                case 'N':
-                    rover.updatePosition(rover.x, rover.y + 1);
-                    break;
-                case 'E':
-                    rover.updatePosition(rover.x + 1, rover.y);
-                    break;
-                case 'S':
-                    rover.updatePosition(rover.x, rover.y - 1);
-                    break;
-                case 'W':
-                    rover.updatePosition(rover.x - 1, rover.y);
-                    break;
-            }
-            drawPiece(rover);
-            break;
-        default:
-            alert('Invalid move');
+    if (move == 'M') {
+        rover.updatePosition(rover.x + moveSpec[move][rover.direction].x, rover.y + moveSpec[move][rover.direction].y);
+    } else {
+        rover.direction = moveSpec[move][rover.direction];
+        rover.updatePosition(rover.x, rover.y);
     }
+
+    drawPiece(rover);
 }
 
 function draw() {
