@@ -1,7 +1,5 @@
 
-var NUMBER_OF_COLS = 8,//TODO ser definido pela tela
-    NUMBER_OF_ROWS = 8,//TODO ser definido pela tela
-    BLOCK_SIZE = 100,
+var BLOCK_SIZE = 100,
     PADDING_LEFT = 15,
     PADDING_TOP = 97,
     BLOCK_COLOUR_1 = '#d94e13',
@@ -42,6 +40,8 @@ function Rover(name, x, y, direction) {
 var rovers = {};
 
 var canvas = null,
+    maximumX = null,
+    maximumY = null,
     roverImg = null,
     ctx = null,
     canvas = null;
@@ -61,7 +61,7 @@ function getBlockColour(y, x) {
 function drawBlock(iRowCounter, iBlockCounter) {
     ctx.fillStyle = getBlockColour(iRowCounter, iBlockCounter);
 
-    ctx.fillRect(iRowCounter * BLOCK_SIZE, (NUMBER_OF_ROWS - 1 - iBlockCounter) * BLOCK_SIZE,
+    ctx.fillRect(iRowCounter * BLOCK_SIZE, (maximumY - 1 - iBlockCounter) * BLOCK_SIZE,
         BLOCK_SIZE, BLOCK_SIZE);
 
     ctx.stroke();
@@ -83,7 +83,7 @@ function drawPiece(rover) {
 
     rovers[rover.name] = rover;
     var px = rover.x * BLOCK_SIZE;
-    var py = (NUMBER_OF_ROWS - 1 - rover.y) * BLOCK_SIZE;
+    var py = (maximumY - 1 - rover.y) * BLOCK_SIZE;
 
     ctx.drawImage(roverImg,
         0, 0,
@@ -100,7 +100,7 @@ function drawRow(iRowCounter) {
     var iBlockCounter;
 
     // Draw 8 block left to right
-    for (iBlockCounter = 0; iBlockCounter < NUMBER_OF_ROWS; iBlockCounter++) {
+    for (iBlockCounter = 0; iBlockCounter < maximumY; iBlockCounter++) {
         drawBlock(iRowCounter, iBlockCounter);
     }
 }
@@ -108,14 +108,14 @@ function drawRow(iRowCounter) {
 function drawBoard() {
     var y;
 
-    for (y = 0; y < NUMBER_OF_ROWS; y++) {
+    for (y = 0; y < maximumY; y++) {
         drawRow(y);
     }
 
     ctx.lineWidth = 3;
     ctx.strokeRect(0, 0,
-        NUMBER_OF_ROWS * BLOCK_SIZE,
-        NUMBER_OF_COLS * BLOCK_SIZE);
+        maximumY * BLOCK_SIZE,
+        maximumX * BLOCK_SIZE);
 }
 
 function newRover() {
@@ -170,11 +170,25 @@ function move() {
 }
 
 function draw() {
+    var x = parseInt(document.getElementById('maximumX').value);
+    if (x === undefined || x < 0) {
+        alert('Inform Y coordinate')
+        return;
+    }
+    var y = parseInt(document.getElementById('maximumY').value);
+    if (y === undefined || y < 0) {
+        alert('Inform Y coordinate')
+        return;
+    }
+
+    rovers = {};
+    maximumX = x;
+    maximumY = y;
     canvas = document.getElementById('mars');
     if (canvas.getContext) {
         ctx = canvas.getContext('2d');
 
-        BLOCK_SIZE = canvas.height / NUMBER_OF_ROWS;
+        BLOCK_SIZE = canvas.height / maximumY;
 
         drawBoard();
 
